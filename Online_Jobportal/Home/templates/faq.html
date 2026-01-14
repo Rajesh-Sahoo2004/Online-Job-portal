@@ -1,0 +1,441 @@
+{%extends "layout/base.html" %}
+{%block homeblock %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Frequently Asked Questions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .faq-wrapper {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .header-section {
+            text-align: center;
+            color: #333;
+            margin-bottom: 60px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .header-section h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .header-section .subtitle {
+            font-size: 1.2em;
+            color: #666;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* FAQ Search */
+        .search-section {
+            max-width: 500px;
+            margin: 0 auto 50px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: #f8f9ff;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* FAQ Categories */
+        .categories {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+
+        .category-btn {
+            padding: 10px 20px;
+            background: #f8f9ff;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            color: #666;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .category-btn.active,
+        .category-btn:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* FAQ Accordion */
+        .faq-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            padding: 25px 30px;
+            background: linear-gradient(135deg, #e8f0ff 0%, #f0e8ff 100%);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .faq-question:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .faq-question::after {
+            content: '▼';
+            font-size: 0.8em;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question.active::after {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            background: white;
+            transition: all 0.4s ease;
+            color: #555;
+            line-height: 1.7;
+        }
+
+        .faq-answer.active {
+            max-height: 200px;
+            padding: 25px 30px;
+        }
+
+        /* Stats */
+        .faq-stats {
+            background: linear-gradient(135deg, #e8f0ff 0%, #f0e8ff 100%);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .faq-stats h3 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .faq-stats p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-section h1 {
+                font-size: 2.2em;
+            }
+
+            .faq-question {
+                padding: 20px;
+                font-size: 1em;
+            }
+
+            .faq-answer.active {
+                padding: 20px;
+            }
+
+            body {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="faq-wrapper">
+    <!-- Header -->
+    <div class="header-section">
+        <h1>Frequently Asked Questions</h1>
+        <p class="subtitle">Find answers to common questions about our platform</p>
+    </div>
+
+    <!-- FAQ Stats -->
+    <div class="faq-stats">
+        <h3>🤔 1,247 Questions Answered</h3>
+        <p>Updated weekly with the most common user inquiries</p>
+    </div>
+
+    <!-- Search -->
+    <div class="search-section">
+        <input type="text" class="search-input" placeholder="Search FAQs... (e.g., 'how to apply', 'registration')">
+    </div>
+
+    <!-- Categories -->
+    <div class="categories">
+        <button class="category-btn active" data-category="all">All</button>
+        <button class="category-btn" data-category="jobseekers">Job Seekers</button>
+        <button class="category-btn" data-category="employers">Employers</button>
+        <button class="category-btn" data-category="account">Account</button>
+        <button class="category-btn" data-category="support">Support</button>
+    </div>
+
+    <!-- FAQ Accordion -->
+    <div class="faq-section">
+        <div class="faq-item">
+            <div class="faq-question active" data-category="jobseekers">
+                What is this job portal?
+            </div>
+            <div class="faq-answer active">
+                Our job portal is an online platform that connects job seekers with employers. It helps users find suitable job opportunities easily through advanced search filters and personalized recommendations.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" data-category="account">
+                Is registration free?
+            </div>
+            <div class="faq-answer">
+                Yes, registration is completely free for job seekers. Employers can post up to 3 jobs for free, with premium plans available for unlimited postings.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" data-category="jobseekers">
+                How can I apply for a job?
+            </div>
+            <div class="faq-answer">
+                Create an account, complete your profile with resume, search for jobs using filters, and click the "Apply Now" button. You can apply to multiple jobs with one click.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" data-category="employers">
+                Can employers post jobs?
+            </div>
+            <div class="faq-answer">
+                Yes, employers can register and post job openings. Free accounts get 3 job postings per month, while premium accounts offer unlimited postings and priority visibility.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" data-category="support">
+                How can I contact support?
+            </div>
+            <div class="faq-answer">
+                Use our Contact page, email support@jobportal.com, or call +1 (555) 123-4567. Response time is typically within 24 hours.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" data-category="account">
+                How do I update my profile?
+            </div>
+            <div class="faq-answer">
+                Go to "My Profile" in your dashboard, click "Edit Profile," upload your updated resume, and save changes. Profile updates are live immediately.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" data-category="jobseekers">
+                Can I apply without a resume?
+            </div>
+            <div class="faq-answer">
+                Most jobs require a resume for better matching, but some entry-level positions allow applications with just profile information.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" data-category="jobseekers">
+                How do I track my applications?
+            </div>
+            <div class="faq-answer">
+                Visit "My Applications" in your dashboard to see application status (Applied, Shortlisted, Interview, Rejected) with real-time updates from employers.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" data-category="employers">
+                How long do job postings stay active?
+            </div>
+            <div class="faq-answer">
+                Free postings stay active for 30 days. Premium postings remain active until you close them or hire a candidate.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" data-category="account">
+                Can I delete my account?
+            </div>
+            <div class="faq-answer">
+                Yes, go to Profile Settings → Account → Delete Account. All your data will be permanently removed within 7 days.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" data-category="jobseekers">
+                Are the jobs verified?
+            </div>
+            <div class="faq-answer">
+                All employer accounts are verified. Jobs are monitored for legitimacy, and suspicious postings are removed within 24 hours.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" data-category="support">
+                What payment methods do you accept?
+            </div>
+            <div class="faq-answer">
+                We accept all major credit/debit cards, PayPal, and bank transfers for premium employer accounts. All transactions are secure with SSL encryption.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" data-category="jobseekers">
+                Can I get job alerts?
+            </div>
+            <div class="faq-answer">
+                Yes! Set up email notifications in Profile Settings → Job Alerts. Get daily/weekly emails for matching jobs based on your preferences.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" data-category="employers">
+                How do I manage applications?
+            </div>
+            <div class="faq-answer">
+                In your employer dashboard, go to "Job Applications" to view, shortlist, reject, or schedule interviews with candidates.
+            </div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question" data-category="support">
+                Is my data secure?
+            </div>
+            <div class="faq-answer">
+                Yes, we use enterprise-grade security with SSL encryption, GDPR compliance, and regular security audits to protect your personal information.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Accordion functionality
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', () => {
+            const answer = question.nextElementSibling;
+            const isActive = question.classList.contains('active');
+            
+            // Close all other answers
+            document.querySelectorAll('.faq-answer').forEach(ans => {
+                ans.classList.remove('active');
+            });
+            document.querySelectorAll('.faq-question').forEach(q => {
+                q.classList.remove('active');
+            });
+            
+            // Toggle current
+            if (!isActive) {
+                question.classList.add('active');
+                answer.classList.add('active');
+            }
+        });
+    });
+
+    // Category filter (basic implementation)
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            const category = btn.dataset.category;
+            document.querySelectorAll('.faq-item').forEach(item => {
+                if (category === 'all' || item.querySelector('.faq-question').dataset.category === category) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    });
+
+    // Search functionality
+    document.querySelector('.search-input').addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        document.querySelectorAll('.faq-question').forEach(question => {
+            const text = question.textContent.toLowerCase();
+            const item = question.parentElement;
+            if (searchTerm === '' || text.includes(searchTerm)) {
+                item.style.display = 'block';
+            } else {
+                item.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+</body>
+{%endblock %}

@@ -1,0 +1,350 @@
+{%extends "layout/base.html" %}
+{%block homeblock %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Portal Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4f8;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .dashboard-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        .dashboard-header {
+            text-align: center;
+            color: #333;
+            margin-bottom: 60px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        .dashboard-header h1 {
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .dashboard-header p {
+            font-size: 1.2em;
+            color: #666;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 2px 12px rgba(102, 126, 234, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .stat-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .stat-card h3 {
+            color: #667eea;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        /* Action Cards */
+        .action-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .action-card {
+            background: linear-gradient(135deg, #e8f0ff 0%, #f0e8ff 100%);
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 12px rgba(102, 126, 234, 0.1);
+        }
+
+        .action-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.25);
+        }
+
+        .action-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .action-card h3 {
+            color: #333;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .action-card p {
+            color: #666;
+            font-size: 1em;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .action-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        /* Latest Jobs Section */
+        .jobs-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .jobs-section h2 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .job-card {
+            padding: 25px;
+            border-left: 4px solid #667eea;
+            background: #f8f9ff;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .job-card:hover {
+            background: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.15);
+            transform: translateX(5px);
+        }
+
+        .job-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .job-company {
+            color: #667eea;
+            font-size: 1em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .job-meta {
+            color: #666;
+            font-size: 0.9em;
+            display: flex;
+            gap: 15px;
+        }
+
+        .job-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-header h1 {
+                font-size: 2.2em;
+            }
+
+            body {
+                padding: 20px 15px;
+            }
+
+            .action-cards,
+            .stats-grid,
+            .jobs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .jobs-section {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-wrapper">
+    <!-- Header -->
+    <div class="dashboard-header">
+        <h1>Welcome Back!</h1>
+        <p>Discover your next career opportunity</p>
+    </div>
+
+    <!-- Stats Overview -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <h3>1,247</h3>
+            <p>Total Jobs Available</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <h3>892</h3>
+            <p>Active Employers</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">✅</div>
+            <h3>5,430</h3>
+            <p>Applications Sent</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <h3>4.8/5</h3>
+            <p>User Rating</p>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="action-cards">
+        <div class="action-card">
+            <div class="action-icon">🔍</div>
+            <h3>Browse Jobs</h3>
+            <p>Search and apply for the latest job openings across all categories</p>
+            <a href="/jobs" class="action-btn">Find Jobs</a>
+        </div>
+
+        <div class="action-card">
+            <div class="action-icon">📤</div>
+            <h3>My Applications</h3>
+            <p>Track your job applications and application status</p>
+            <a href="/applications" class="action-btn">View Applications</a>
+        </div>
+
+        <div class="action-card">
+            <div class="action-icon">👤</div>
+            <h3>My Profile</h3>
+            <p>Update your profile information and resume</p>
+            <a href="/profile" class="action-btn">Edit Profile</a>
+        </div>
+
+        <div class="action-card">
+            <div class="action-icon">💼</div>
+            <h3>Post a Job</h3>
+            <p>Employers: Post new job vacancies easily</p>
+            <a href="/post-job" class="action-btn">Post Job</a>
+        </div>
+    </div>
+
+    <!-- Latest Jobs -->
+    <div class="jobs-section">
+        <h2>Latest Job Opportunities</h2>
+        <div class="jobs-grid">
+            <div class="job-card">
+                <div class="job-title">Senior Frontend Developer</div>
+                <div class="job-company">ABC Technologies</div>
+                <div class="job-meta">
+                    <span>💰 $80k - $120k</span>
+                    <span>📍 Remote</span>
+                    <span>🆕 Posted 2 days ago</span>
+                </div>
+            </div>
+
+            <div class="job-card">
+                <div class="job-title">Backend Python Developer</div>
+                <div class="job-company">XYZ Solutions</div>
+                <div class="job-meta">
+                    <span>💰 $70k - $100k</span>
+                    <span>📍 New York</span>
+                    <span>🆕 Posted 1 day ago</span>
+                </div>
+            </div>
+
+            <div class="job-card">
+                <div class="job-title">Full Stack Developer</div>
+                <div class="job-company">TechSoft Pvt Ltd</div>
+                <div class="job-meta">
+                    <span>💰 $90k - $130k</span>
+                    <span>📍 Bangalore</span>
+                    <span>🆕 Posted 3 hours ago</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+{%endblock %}
